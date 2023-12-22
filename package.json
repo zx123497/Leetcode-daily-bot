@@ -1,0 +1,28 @@
+{
+  "name": "leetcode-daily-bot",
+  "version": "1.0.0",
+  "description": "leetcode daily tracker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zx123497/Leetcode-daily-bot.git"
+  },
+  "keywords": [
+    "leetcode"
+  ],
+  "author": "Leo Chen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zx123497/Leetcode-daily-bot/issues"
+  },
+  "homepage": "https://github.com/zx123497/Leetcode-daily-bot#readme",
+  "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
+    "express": "^4.18.2",
+    "googleapis": "^105.0.0",
+    "node-schedule": "^2.1.1"
+  }
+}
