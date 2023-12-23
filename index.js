@@ -1,4 +1,4 @@
-const express = require('express');
+
 const schedule = require('node-schedule');
 const process = require('process');
 const {authenticate} = require('@google-cloud/local-auth');
@@ -6,9 +6,6 @@ const {google} = require('googleapis');
 const fs = require('fs').promises;
 const path = require('path');
 
-
-const app = express();
-const port = 3001;
 
 // Just some constants
 const LEETCODE_API_ENDPOINT = 'https://leetcode.com/graphql'
@@ -162,23 +159,12 @@ async function saveCredentials(client) {
     });
   }
 
-  app.get('/oauth2callback', (req, res) => {
-    res.send('Hello World3!');
-})
-
-app.get('/', async (req, res) => {
-    res.send('Hello World!');
-    
-    let job = schedule.scheduleJob('1 0 15 * * *', async function(){
-        authorize().then(addQuestion).catch(console.error);
-        
-    });
-})
+// update the sheet everyday at 3:01 pm
+let job = schedule.scheduleJob('1 0 15 * * *', async function(){
+    authorize().then(addQuestion).catch(console.error);
+});
 
 
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-  })
 
 
