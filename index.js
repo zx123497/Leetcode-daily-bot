@@ -5,62 +5,9 @@ const { authenticate } = require('@google-cloud/local-auth');
 const { google } = require('googleapis');
 const fs = require('fs').promises;
 const path = require('path');
-
-
-// Just some constants
-const LEETCODE_API_ENDPOINT = 'https://leetcode.com/graphql'
-const DAILY_CODING_CHALLENGE_QUERY = `
-query questionOfToday {
-	activeDailyCodingChallengeQuestion {
-		date
-		userStatus
-		link
-		question {
-			acRate
-			difficulty
-			freqBar
-			frontendQuestionId: questionFrontendId
-			isFavor
-			paidOnly: isPaidOnly
-			status
-			title
-			titleSlug
-			hasVideoSolution
-			hasSolution
-			topicTags {
-				name
-				id
-				slug
-			}
-		}
-	}
-}`
-
-const SHEET_ID = '1hhjTKal_UYRqSLyqW7Ex9SbMIPSUtMZ_bCpjIRYevig';
-
-// We can pass the JSON response as an object to our createTodoistTask later.
-const fetchDailyCodingChallenge = async () => {
-  console.log(`Fetching daily coding challenge from LeetCode API.`)
-
-  const init = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: DAILY_CODING_CHALLENGE_QUERY }),
-  }
-
-  const response = await fetch(LEETCODE_API_ENDPOINT, init)
-  return response.json()
-}
-
-const getDailyCodingChallenge = async () => {
-  const question = await fetchDailyCodingChallenge();
-  const questionTitle = question.data.activeDailyCodingChallengeQuestion.question.title;
-  const questionLink = question.data.activeDailyCodingChallengeQuestion.link;
-  const questionDate = question.data.activeDailyCodingChallengeQuestion.date;
-  return { questionTitle, questionLink, questionDate };
-}
-
-
+const { getDailyCodingChallenge } = require('./dailyChallenge');
+const client = require('./discordbot');
+require('dotenv').config();
 // google sheets api
 
 // If modifying these scopes, delete token.json.
@@ -106,7 +53,9 @@ async function saveCredentials(client) {
   await fs.writeFile(TOKEN_PATH, payload);
 }
 
-
+/**
+ * description: authorize the google sheet api
+ */
 async function authorize() {
   let client = await loadSavedCredentialsIfExist();
   if (client) {
@@ -122,6 +71,9 @@ async function authorize() {
   return client;
 }
 
+/**
+ * description: generate a new row request for the sheet
+ */
 function genNewRowRequest(tabId, startIndex, endIndex) {
   const newRowRequest = [{
     insertDimension: {
@@ -137,20 +89,23 @@ function genNewRowRequest(tabId, startIndex, endIndex) {
   return newRowRequest;
 }
 
+/**
+ * description: add a new row to the sheet and fill it with daily question
+ */
 async function addQuestion(auth) {
   const sheets = google.sheets({ version: 'v4', auth });
-  const { questionTitle, questionLink, questionDate } = await getDailyCodingChallenge();
+  const { questionTitle, questionLink } = await getDailyCodingChallenge();
 
   // insert a new row to the sheet
   const newRowRequest1 = genNewRowRequest("0", 2, 3);
   const newRowRequest2 = genNewRowRequest("2047905248", 2, 3); // for solution sharing tab
 
   const p1 = sheets.spreadsheets.batchUpdate({
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: process.env.SHEET_ID,
     resource: { requests: newRowRequest1 },
   });
   const p2 = sheets.spreadsheets.batchUpdate({
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: process.env.SHEET_ID,
     resource: { requests: newRowRequest2 },
   });
 
@@ -172,13 +127,13 @@ async function addQuestion(auth) {
   };
 
   const p3 = sheets.spreadsheets.values.update({
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: process.env.SHEET_ID,
     range: 'done!A3:G',
     valueInputOption: 'USER_ENTERED',
     resource,
   });
   const p4 = sheets.spreadsheets.values.update({
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: process.env.SHEET_ID,
     range: 'solution sharing!A3:G',
     valueInputOption: 'USER_ENTERED',
     resource,
@@ -186,11 +141,18 @@ async function addQuestion(auth) {
   await Promise.all([p3, p4]);
 }
 
+// ********** main routine **********
+
 // update the sheet everyday at 4:01 pm
 let job = schedule.scheduleJob('1 0 16 * * *', async function () {
   authorize().then(addQuestion).catch(console.error);
 });
 
+
+// discord bot login
+client.login(process.env.DISCORD_TOKEN);
+
+// ************************************
 // for testing
 // (async () => {
 //   authorize().then(addQuestion).catch(console.error);
