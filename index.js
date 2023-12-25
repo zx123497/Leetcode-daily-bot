@@ -160,7 +160,7 @@ async function saveCredentials(client) {
   }
 
 // update the sheet everyday at 3:01 pm
-let job = schedule.scheduleJob('1 0 15 * * *', async function(){
+let job = schedule.scheduleJob('1 0 16 * * *', async function(){
     authorize().then(addQuestion).catch(console.error);
 });
 
