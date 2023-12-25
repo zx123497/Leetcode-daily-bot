@@ -20,8 +20,15 @@ client.on('ready', async () => {
         description: 'Replies with Hello!',
     };
 
+    // create daily challenge slash command
+    const dailyChallengeCommand = {
+        name: 'dailychallenge',
+        description: 'Replies with the daily coding challenge!',
+    };
+
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
     await guild.commands.create(helloCommand);
+    await guild.commands.create(dailyChallengeCommand);
 
     let job = schedule.scheduleJob('1 0 16 * * *', async () =>{
 
@@ -39,6 +46,10 @@ client.on('interactionCreate', async (interaction) => {
     if (interaction.commandName === 'hello') {
         await interaction.reply(`Hello ${interaction.user.username}`);
     }
+
+    if (interaction.commandName === 'dailychallenge') {
+        const question = await getDailyCodingChallenge();
+        await interaction.reply(`Today\'s Leetcode Daily Challenge: ${question.questionTitle}\nhttps://leetcode.com${question.questionLink}`);
 });
 
 
