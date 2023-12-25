@@ -8,11 +8,20 @@ const client = new Client({ intents: [
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
+    GatewayIntentBits.MessageContent,
 ] });
 
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
+
+    // create hello slash command
+    const helloCommand = {
+        name: 'hello',
+        description: 'Replies with Hello!',
+    };
+
+    const guild = client.guilds.cache.get(process.env.GUILD_ID);
+    await guild.commands.create(helloCommand);
 
     let job = schedule.scheduleJob('1 0 16 * * *', async () =>{
 
@@ -21,6 +30,15 @@ client.on('ready', async () => {
         client.channels.cache.get(process.env.NOTIFICATION_CHANNEL_ID).send(`Today\'s Leetcode Daily Challenge: ${question.questionTitle}\nhttps://leetcode.com${question.questionLink}`);
     });
     
+});
+
+// slash commands handler
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) return;
+
+    if (interaction.commandName === 'hello') {
+        await interaction.reply(`Hello ${interaction.user.username}`);
+    }
 });
 
 
