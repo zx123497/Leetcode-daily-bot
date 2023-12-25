@@ -50,6 +50,7 @@ client.on('interactionCreate', async (interaction) => {
     if (interaction.commandName === 'dailychallenge') {
         const question = await getDailyCodingChallenge();
         await interaction.reply(`Today\'s Leetcode Daily Challenge: ${question.questionTitle}\nhttps://leetcode.com${question.questionLink}`);
+    }
 });
 
 
