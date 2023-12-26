@@ -29,9 +29,12 @@ client.on('ready', async () => {
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
     await guild.commands.create(helloCommand);
     await guild.commands.create(dailyChallengeCommand);
-
-    let job = schedule.scheduleJob('1 0 16 * * *', async () =>{
-
+    // undone daily challenge notification
+    // let undoneJob = schedule.scheduleJob('59 59 15 * * *', async () =>{
+    //     const question = await getDailyCodingChallenge();
+    //     client.channels.cache.get(process.env.NOTIFICATION_CHANNEL_ID).send(`Today\'s Leetcode Daily Challenge: ${question.questionTitle}\nhttps://leetcode.com${question.questionLink}`);
+    // })
+    let newChallengeJob = schedule.scheduleJob('1 0 16 * * *', async () =>{
         // get the daily coding challenge and send it to the discord channel
         const question = await getDailyCodingChallenge();
         client.channels.cache.get(process.env.NOTIFICATION_CHANNEL_ID).send(`Today\'s Leetcode Daily Challenge: ${question.questionTitle}\nhttps://leetcode.com${question.questionLink}`);
