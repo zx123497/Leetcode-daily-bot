@@ -139,5 +139,18 @@ async function addQuestion(auth) {
   await Promise.all([p3, p4]);
 }
 
+/**
+ * description: get the done list of daily questions
+ */
+async function getDoneList(auth){
+  const sheets = google.sheets({ version: 'v4', auth });
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: process.env.SHEET_ID,
+    range: 'done!C3:G3',
+  });
+  console.log(res.data.values);
+  return res.data.values[0];
+}
 
-  module.exports = {authorize, addQuestion};
+
+  module.exports = {authorize, addQuestion, getDoneList};

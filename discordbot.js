@@ -2,6 +2,11 @@ require('dotenv').config();
 const schedule = require('node-schedule');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { getDailyCodingChallenge } = require('./dailyChallenge');
+const { authorize, getDoneList } = require('./googleSheet');
+
+// total members in the server
+const TOTALMEMBERS = 5;
+
 
 // bot intents
 const client = new Client({ intents: [
@@ -29,11 +34,24 @@ client.on('ready', async () => {
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
     await guild.commands.create(helloCommand);
     await guild.commands.create(dailyChallengeCommand);
-    // undone daily challenge notification
-    // let undoneJob = schedule.scheduleJob('59 59 15 * * *', async () =>{
-    //     const question = await getDailyCodingChallenge();
-    //     client.channels.cache.get(process.env.NOTIFICATION_CHANNEL_ID).send(`Today\'s Leetcode Daily Challenge: ${question.questionTitle}\nhttps://leetcode.com${question.questionLink}`);
-    // })
+    // undone daily challenge notification at 15:30
+    let undoneJob = schedule.scheduleJob('0 30 15 * * *', async () =>{
+        const doneList = await authorize().then(getDoneList).catch(console.error);
+        while(doneList.length < TOTALMEMBERS){
+            doneList.push('');
+        }
+        idList = process.env.MEMBER_IDS.split(', ');
+        let undoneNotification = doneList.map((value, index) => {
+            if(value === '' && index !== 3){
+                return `<@${idList[index]}>`;
+            }
+        }).join(' ');
+        undoneNotification += ' Please finish your daily challenge.';
+        const question = await getDailyCodingChallenge();
+        undoneNotification += `\nhttps://leetcode.com${question.questionLink}`;
+        // send the notification to the discord channel
+        client.channels.cache.get(process.env.NOTIFICATION_CHANNEL_ID).send(undoneNotification);
+    })
     let newChallengeJob = schedule.scheduleJob('1 0 16 * * *', async () =>{
         // get the daily coding challenge and send it to the discord channel
         const question = await getDailyCodingChallenge();
