@@ -11,8 +11,16 @@ services:
   server:
     build:
       context: .
+    env_file:
+      - .env
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - NOTIFICATION_CHANNEL_ID=${NOTIFICATION_CHANNEL_ID}
+      - DEV_CHANNEL_ID=${DEV_CHANNEL_ID}
+      - SHEET_ID=${SHEET_ID}
+      - GUILD_ID=${GUILD_ID}
+      - MEMBER_IDS=${MEMBER_IDS}
     ports:
       - 3000:3000
 
