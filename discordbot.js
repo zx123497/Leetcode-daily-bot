@@ -3,7 +3,7 @@ const schedule = require('node-schedule');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { getDailyCodingChallenge } = require('./dailyChallenge');
 const { authorize, getDoneList } = require('./googleSheet');
-
+const process = require('process');
 // total members in the server
 const TOTALMEMBERS = 5;
 
@@ -85,6 +85,7 @@ client.on('messageCreate', async (msg) => {
     // Daily Challenge command
     if (msg.content === 'Daily Challenge') {
         const question = await getDailyCodingChallenge();
+        console.log("to here")
         msg.reply(`Today\'s Leetcode Daily Challenge: ${question.questionTitle}\nhttps://leetcode.com${question.questionLink}`);
     }
 });

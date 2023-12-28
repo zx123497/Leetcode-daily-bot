@@ -1,4 +1,7 @@
-const LEETCODE_API_ENDPOINT = 'https://leetcode.com/graphql'
+const LEETCODE_API_ENDPOINT = 'https://leetcode.com/graphql';
+
+
+
 const DAILY_CODING_CHALLENGE_QUERY = `
 query questionOfToday {
 	activeDailyCodingChallengeQuestion {
@@ -32,11 +35,13 @@ const fetchDailyCodingChallenge = async () => {
 
     const init = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+		 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36' },
         body: JSON.stringify({ query: DAILY_CODING_CHALLENGE_QUERY }),
     }
 
     const response = await fetch(LEETCODE_API_ENDPOINT, init)
+	console.log(response);
     return response.json()
 }
 
