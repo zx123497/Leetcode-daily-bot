@@ -35,7 +35,7 @@ client.on('ready', async () => {
     await guild.commands.create(helloCommand);
     await guild.commands.create(dailyChallengeCommand);
     // undone daily challenge notification at 15:30
-    let undoneJob = schedule.scheduleJob('0 30 15 * * *', async () =>{
+    let undoneJob = schedule.scheduleJob('0 40 15 * * *', async () =>{
         const doneList = await authorize().then(getDoneList).catch(console.error);
         while(doneList.length < TOTALMEMBERS){
             doneList.push('');
