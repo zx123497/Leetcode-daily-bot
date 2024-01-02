@@ -32,8 +32,11 @@ client.on('ready', async () => {
     };
 
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
+    const guild2 = client.guilds.cache.get(process.env.GUILD_ID2);
     await guild.commands.create(helloCommand);
     await guild.commands.create(dailyChallengeCommand);
+    await guild2.commands.create(helloCommand);
+    await guild2.commands.create(dailyChallengeCommand);
     // undone daily challenge notification at 15:30
     let undoneJob = schedule.scheduleJob('0 40 15 * * *', async () =>{
         const doneList = await authorize().then(getDoneList).catch(console.error);
