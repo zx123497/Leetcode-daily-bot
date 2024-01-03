@@ -5,7 +5,7 @@ const { getDailyCodingChallenge } = require('./dailyChallenge');
 const { authorize, getDoneList } = require('./googleSheet');
 const process = require('process');
 // total members in the server
-const TOTALMEMBERS = 5;
+
 
 
 // bot intents
@@ -40,11 +40,14 @@ client.on('ready', async () => {
     // undone daily challenge notification at 15:30
     let undoneJob = schedule.scheduleJob('0 40 15 * * *', async () =>{
         const doneList = await authorize().then(getDoneList).catch(console.error);
-        while(doneList.length < TOTALMEMBERS){
+        
+        idList = process.env.MEMBER_IDS.split(', ');
+        const totalMembers = idList.length;
+        while(doneList.length < totalMembers){
             doneList.push('');
         }
-        idList = process.env.MEMBER_IDS.split(', ');
         let undoneNotification = doneList.map((value, index) => {
+            // carrie no discord
             if(value === '' && index !== 3){
                 return `<@${idList[index]}>`;
             }

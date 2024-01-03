@@ -126,13 +126,13 @@ async function addQuestion(auth) {
 
   const p3 = sheets.spreadsheets.values.update({
     spreadsheetId: process.env.SHEET_ID,
-    range: 'done!A3:G',
+    range: 'done!A3:H',
     valueInputOption: 'USER_ENTERED',
     resource,
   });
   const p4 = sheets.spreadsheets.values.update({
     spreadsheetId: process.env.SHEET_ID,
-    range: 'solution sharing!A3:G',
+    range: 'solution sharing!A3:H',
     valueInputOption: 'USER_ENTERED',
     resource,
   });
@@ -146,7 +146,7 @@ async function getDoneList(auth){
   const sheets = google.sheets({ version: 'v4', auth });
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SHEET_ID,
-    range: 'done!C3:G3',
+    range: 'done!C3:H3',
   });
   console.log(res.data.values);
   return res.data.values[0];
