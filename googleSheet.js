@@ -124,15 +124,20 @@ async function addQuestion(auth) {
     values: list,
   };
 
+  const idList = process.env.MEMBER_IDS.split(', ');
+  const totalMembers = idList.length;
+  // C3: (C+totalMembers - 1)3
+  const queryStringDone = `done!A3:${String.fromCharCode(67 + totalMembers - 1)}`;
+  const queryStringSol = `solution sharing!A3:${String.fromCharCode(67 + totalMembers - 1)}`;
   const p3 = sheets.spreadsheets.values.update({
     spreadsheetId: process.env.SHEET_ID,
-    range: 'done!A3:H',
+    range: queryStringDone,
     valueInputOption: 'USER_ENTERED',
     resource,
   });
   const p4 = sheets.spreadsheets.values.update({
     spreadsheetId: process.env.SHEET_ID,
-    range: 'solution sharing!A3:H',
+    range: queryStringSol,
     valueInputOption: 'USER_ENTERED',
     resource,
   });
@@ -143,14 +148,32 @@ async function addQuestion(auth) {
  * description: get the done list of daily questions
  */
 async function getDoneList(auth){
+  const idList = process.env.MEMBER_IDS.split(', ');
+  const totalMembers = idList.length;
+  // C3: (C+totalMembers - 1)3
+  const queryString = `done!C3:${String.fromCharCode(67 + totalMembers - 1)}3`;
   const sheets = google.sheets({ version: 'v4', auth });
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SHEET_ID,
-    range: 'done!C3:H3',
+    range: queryString,
+  });
+  console.log(res.data.values);
+  return res.data.values[0];
+}
+
+async function getAllTimeCount(auth){
+  const idList = process.env.MEMBER_IDS.split(', ');
+  const totalMembers = idList.length;
+  // C1: (C+totalMembers - 1)1
+  const queryString = `done!C1:${String.fromCharCode(67 + totalMembers - 1)}1`;
+  const sheets = google.sheets({ version: 'v4', auth });
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: process.env.SHEET_ID,
+    range: queryString,
   });
   console.log(res.data.values);
   return res.data.values[0];
 }
 
 
-  module.exports = {authorize, addQuestion, getDoneList};
+module.exports = {authorize, addQuestion, getDoneList, getAllTimeCount};

@@ -48,7 +48,7 @@ client.on('ready', async () => {
         }
         let undoneNotification = doneList.map((value, index) => {
             // carrie no discord
-            if(value === '' && index !== 3){
+            if(value !== "done" && index !== 3){
                 return `<@${idList[index]}>`;
             }
         }).join(' ');
