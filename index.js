@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 app.use(cors({ origin: 'http://localhost:3000' }));
 // api routes
-app.use('/', indexRouter);
+app.use('/api/', indexRouter);
 
 // ********** express server **********
 app.listen(port, () => {

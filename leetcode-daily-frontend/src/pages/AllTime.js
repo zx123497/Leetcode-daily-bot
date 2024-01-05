@@ -29,7 +29,7 @@ const AllTime = () => {
       return 0;
     }
     useEffect(()=>{
-      axios.get("http://localhost:3001/alltime").then((res)=>{
+      axios.get("/api/alltime").then((res)=>{
         console.log("frontend",res);
         let nameList = [];
         let countList = [];
