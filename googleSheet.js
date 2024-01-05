@@ -165,14 +165,18 @@ async function getAllTimeCount(auth){
   const idList = process.env.MEMBER_IDS.split(', ');
   const totalMembers = idList.length;
   // C1: (C+totalMembers - 1)1
-  const queryString = `done!C1:${String.fromCharCode(67 + totalMembers - 1)}1`;
+  const queryString = `done!C1:${String.fromCharCode(67 + totalMembers - 1)}2`;
   const sheets = google.sheets({ version: 'v4', auth });
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.SHEET_ID,
     range: queryString,
   });
   console.log(res.data.values);
-  return res.data.values[0];
+  let list = [];
+  for(let i = 0; i < totalMembers; i++){
+    list.push({name: res.data.values[1][i], count: parseInt(res.data.values[0][i])});
+  }
+  return list;
 }
 
 
