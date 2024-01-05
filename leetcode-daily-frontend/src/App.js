@@ -1,4 +1,4 @@
-import {Routes, Route, BrowserRouter, Outlet} from 'react-router-dom';
+import { Routes, Route,  useLocation} from 'react-router-dom';
 import AllTime from './pages/AllTime';
 import Weekly from './pages/Weekly';
 import Streak from './pages/Streak';
@@ -9,12 +9,13 @@ import './App.css';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ColorModeContext from './contexts/ColorModeContext';
 import CssBaseline from '@mui/material/CssBaseline';
-
+import {AnimatePresence} from 'framer-motion';
 
 
 
 const App = () => {
   const [mode, setMode] = useState("dark");
+  const location = useLocation();
 
   const colorMode = useMemo(
     ()=>({
@@ -46,18 +47,26 @@ const App = () => {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
       <CssBaseline />
+      
       <div className="App">
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<NavbarLayout/>}>
+      <Navbar/>
+      <AnimatePresence mode='wait' initial={false}>
+
+              <Routes location={location} key={location.pathname.split('/')[1]}>
+                
+                
                   <Route path="/" element={<AllTime/>}/>
-                  <Route path="/about" element={<Weekly/>}/>
+                  <Route  path="/about" element={<Weekly/>}/>
                   <Route path="/streak" element={<Streak/>}/>
                   <Route path="/bobacoin" element={<BobaCoin/>}/>
-                </Route>
+                
+                
+                
               </Routes>
-            </BrowserRouter>
+              </AnimatePresence>
+              
           </div>
+          
     </ThemeProvider >
     </ColorModeContext.Provider>
     
@@ -65,13 +74,6 @@ const App = () => {
   );
 }
 
-const NavbarLayout = () => {
-  return(
-    <>
-      <Navbar/>
-      <Outlet/>
-    </>
-  )
-}
+
 
 export default App;

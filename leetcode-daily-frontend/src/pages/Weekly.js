@@ -13,6 +13,7 @@ import React from "react";
 // import FormControl from '@mui/material/FormControl';
 // import Select from '@mui/material/Select';
 import notfound from '../assets/images/notfound.png';
+import {motion} from "framer-motion";
 const Weekly = () => {
 //     const theme = useTheme();
 //     const [week, setWeek] = React.useState(1);
@@ -21,10 +22,15 @@ const Weekly = () => {
 //     setWeek(event.target.value);
 //   };
     return (
+        <motion.div initial={{ opacity:0, y: 50 }}
+      animate={{ opacity:1, y: 0 }}
+      exit={{ opacity:0, y: 50 }}
+      transition={{ duration: 0.5, delay: 0.1 }}>
         <div>
         <img width={300} src={notfound}></img>
         <h3>施工中...</h3>
         </div>
+        </motion.div>
         
 //       <Container maxWidth="md" sx={{padding: "1rem .5rem"}}>
 //         <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem"}}>

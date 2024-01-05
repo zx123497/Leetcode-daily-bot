@@ -8,7 +8,7 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  server:
+  backend:
     build:
       context: .
     env_file:
@@ -22,6 +22,15 @@ services:
       - SHEET_ID=${SHEET_ID}
       - GUILD_ID=${GUILD_ID}
       - MEMBER_IDS=${MEMBER_IDS}
+    ports:
+      - 3001:3001
+
+
+  frontend:
+    build:
+      context: ./leetcode-daily-frontend
+    environment:
+      NODE_ENV: production
     ports:
       - 3000:3000
 

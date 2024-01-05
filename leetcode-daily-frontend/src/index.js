@@ -7,6 +7,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {MetaMaskProvider} from '@metamask/sdk-react';
+import { BrowserRouter } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 const  container = document.getElementById('root');
 const root = createRoot(container);
@@ -20,7 +21,11 @@ root.render(
       icons: [],
     },
   }}>
-    <App />
+  <BrowserRouter>
+  <App />
+  </BrowserRouter>
+      
+   
   </MetaMaskProvider>);
 
 // If you want to start measuring performance in your app, pass a function

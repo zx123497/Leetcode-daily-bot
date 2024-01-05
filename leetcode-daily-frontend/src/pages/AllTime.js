@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
+import {motion} from "framer-motion";
 const AllTime = () => {
     const theme = useTheme();
     const [names, setNames] = React.useState([]);
@@ -47,13 +48,17 @@ const AllTime = () => {
     
 
     return (
-      <Container maxWidth="md" sx={{padding: "1rem .5rem"}}>
+      <motion.div initial={{ opacity:0, y: 50 }}
+      animate={{ opacity:1, y: 0 }}
+      exit={{ opacity:0, y: 50 }}
+      transition={{ duration: 0.5, delay: 0.1 }}>
+        <Container maxWidth="md" sx={{padding: "1rem .5rem"}}>
         <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
         <Typography variant="h5" component="div" >
             All-Time Daily Leaderboard
             
           </Typography>
-          <Tooltip title="The total days of daily challenges have done.">
+          <Tooltip title="The total days of daily challenges done.">
   <IconButton>
     <HelpOutlineIcon />
   </IconButton>
@@ -94,6 +99,9 @@ const AllTime = () => {
 </>}
 
       </Container>
+
+      </motion.div>
+      
         
     );
 }
