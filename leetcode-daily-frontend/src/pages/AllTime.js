@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-undef */
 import React, {useEffect} from "react";
 
 import { Box } from "@mui/material";
@@ -13,11 +15,13 @@ import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
 import Skeleton from '@mui/material/Skeleton';
 import {motion} from "framer-motion";
+
 const AllTime = () => {
     const theme = useTheme();
     const [names, setNames] = React.useState([]);
     const [counts, setCounts] = React.useState([]);
     const [data, setData] = React.useState([]);
+    const baseURI = process.env.NODE_ENV === "production" ? "" : "http://localhost:3001";
 
     const compare = ( a, b ) => {
       if ( a.count < b.count ){
@@ -29,7 +33,7 @@ const AllTime = () => {
       return 0;
     }
     useEffect(()=>{
-      axios.get("/api/alltime").then((res)=>{
+      axios.get(`${baseURI}/api/alltime`).then((res)=>{
         console.log("frontend",res);
         let nameList = [];
         let countList = [];
