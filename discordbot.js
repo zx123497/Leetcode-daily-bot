@@ -25,6 +25,12 @@ client.on('ready', async () => {
         description: 'Replies with Hello!',
     };
 
+    // create welcome slash command
+    const welcomeCommand = {
+        name: 'welcome',
+        description: 'Welcome messages to new members!',
+    };
+
     // create daily challenge slash command
     const dailyChallengeCommand = {
         name: 'dailychallenge',
@@ -34,8 +40,10 @@ client.on('ready', async () => {
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
     const guild2 = client.guilds.cache.get(process.env.GUILD_ID2);
     await guild.commands.create(helloCommand);
+    await guild.commands.create(welcomeCommand);
     await guild.commands.create(dailyChallengeCommand);
     await guild2.commands.create(helloCommand);
+    await guild2.commands.create(welcomeCommand);
     await guild2.commands.create(dailyChallengeCommand);
     // undone daily challenge notification at 15:30
     let undoneJob = schedule.scheduleJob('0 40 15 * * *', async () =>{
@@ -74,6 +82,10 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.reply(`Hello ${interaction.user.username}`);
     }
 
+    if(interaction.commandName === 'welcome'){
+        await interaction.reply(`Welcome to the LeetCode Daily Challenge Discord Server! 🚀 I'm your LeetCode Daily Agent 👩🏻‍⚕️👨🏻‍⚕️.\n Here are the rules for this challenge:\n1. I will post today's daily challenge at 4:00 PM (Pacific Time) every day.\n2. Please complete your daily challenge and mark your column as 'done' on this Google Sheet:\n https://docs.google.com/spreadsheets/d/1hhjTKal_UYRqSLyqW7Ex9SbMIPSUtMZ_bCpjIRYevig/edit?usp=sharing \n 3:40 PM on the next day, I'll review the sheet and notify those who have not completed the challenge.\n`);
+    }
+
     if (interaction.commandName === 'dailychallenge') {
         const question = await getDailyCodingChallenge();
         await interaction.reply(`Today\'s Leetcode Daily Challenge: ${question.questionTitle}\nhttps://leetcode.com${question.questionLink}`);
@@ -85,8 +97,8 @@ client.on('interactionCreate', async (interaction) => {
 client.on('messageCreate', async (msg) => {
 
     // Hello command
-    if (msg.content === 'Hello') {
-        msg.reply(`Hello ${msg.author.username}`);
+    if (msg.content === 'Welcome') {
+        msg.reply(`Welcome to the LeetCode Daily Challenge Discord Server! 🚀 I'm your LeetCode Daily Agent 👩🏻‍⚕️👨🏻‍⚕️.\n Here are the rules for this challenge:\n1. I will post today's daily challenge at 4:00 PM (Pacific Time) every day.\n2. Please complete your daily challenge and mark your column as 'done' on this Google Sheet:\n https://docs.google.com/spreadsheets/d/1hhjTKal_UYRqSLyqW7Ex9SbMIPSUtMZ_bCpjIRYevig/edit?usp=sharing \n 3:40 PM on the next day, I'll review the sheet and notify those who have not completed the challenge.\n`);
     }
     // Daily Challenge command
     if (msg.content === 'Daily Challenge') {
