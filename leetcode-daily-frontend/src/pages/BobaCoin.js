@@ -28,7 +28,7 @@ const About = () => {
       transition={{ duration: 0.5, delay: 0.1 }}>
         <div>
         <img width={300} src={notfound}></img>
-        <h3>施工中...</h3>
+        <h3>Under Construction...</h3>
         </div>
         </motion.div>
         
